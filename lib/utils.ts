@@ -1,39 +1,31 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+// lib/utils.ts
 
-/**
- * Merge Tailwind classes safely (resolves conflicts).
- * Usage: cn("px-4 py-2", condition && "bg-blue-500")
- */
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+/** Combines class names, filtering falsy values */
+export function cn(...classes: (string | undefined | null | false)[]): string {
+  return classes.filter(Boolean).join(' ');
 }
 
-/**
- * Format a price in USD.
- */
-export function formatPrice(price: number): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(price);
+/** Formats a price string */
+export function formatPrice(price: string | null | undefined): string {
+  return price || 'Request Quote';
 }
 
-/**
- * Truncate a string to a max length.
- */
-export function truncate(str: string, length: number): string {
-  return str.length > length ? `${str.slice(0, length)}...` : str;
+/** Truncates text to a maximum length */
+export function truncate(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength).trim() + '…';
 }
 
-/**
- * Generate a URL-friendly slug from a string.
- */
-export function slugify(str: string): string {
-  return str
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+/** Generates a WhatsApp link */
+export function whatsappLink(message?: string): string {
+  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '15551234567';
+  const text = encodeURIComponent(
+    message || 'Hello! I would like to request a quote for upholstery cleaning.'
+  );
+  return `https://wa.me/${number}?text=${text}`;
+}
+
+/** Returns star rating array */
+export function getStars(rating: number): ('full' | 'empty')[] {
+  return Array.from({ length: 5 }, (_, i) => (i < rating ? 'full' : 'empty'));
 }

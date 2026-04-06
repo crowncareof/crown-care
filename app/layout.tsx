@@ -1,59 +1,67 @@
-import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
-import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
+// app/layout.tsx
+import type { Metadata } from 'next';
+import { Playfair_Display, DM_Sans, DM_Mono } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
+import './globals.css';
 
 const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+});
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+});
+
+const dmMono = DM_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-dm-mono',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Crown Care | Premium Upholstery Cleaning",
-    template: "%s | Crown Care",
+    default: 'Crown Care — Premium Upholstery Cleaning',
+    template: '%s | Crown Care',
   },
   description:
-    "Crown Care delivers premium upholstery cleaning services across the US. Restore your furniture to its original glory with expert, eco-friendly solutions.",
+    'Professional upholstery cleaning services. We restore sofas, chairs, mattresses, and rugs to their original beauty. Safe for kids & pets. Serving the United States.',
   keywords: [
-    "upholstery cleaning",
-    "sofa cleaning",
-    "furniture cleaning",
-    "premium cleaning service",
-    "couch cleaning",
-    "Crown Care",
+    'upholstery cleaning',
+    'sofa cleaning',
+    'couch cleaning',
+    'mattress cleaning',
+    'professional cleaning',
+    'Crown Care',
   ],
-  authors:  [{ name: "Crown Care" }],
-  creator:  "Crown Care",
   openGraph: {
-    type:        "website",
-    locale:      "en_US",
-    title:       "Crown Care | Premium Upholstery Cleaning",
-    description: "Restore your furniture to its original glory with Crown Care.",
-    siteName:    "Crown Care",
+    type: 'website',
+    siteName: 'Crown Care',
+    title: 'Crown Care — Premium Upholstery Cleaning',
+    description: 'Restore your furniture to its original beauty with our professional cleaning service.',
   },
-  twitter: {
-    card:        "summary_large_image",
-    title:       "Crown Care | Premium Upholstery Cleaning",
-    description: "Restore your furniture to its original glory with Crown Care.",
-  },
-  robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="antialiased">{children}</body>
+    <html lang="en" className="scroll-smooth">
+      <body className={`${playfair.variable} ${dmSans.variable} ${dmMono.variable} font-body antialiased`}>
+        {children}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              fontFamily: 'var(--font-dm-sans)',
+              borderRadius: '12px',
+              boxShadow: '0 8px 32px rgba(10,27,77,0.15)',
+            },
+          }}
+        />
+      </body>
     </html>
   );
 }

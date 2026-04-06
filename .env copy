@@ -1,0 +1,2 @@
+DIRECT_DATABASE_URL="postgresql://postgres:Sucesso%402026%23@db.dzrfmecdnavozxdeixxr.supabase.co:5432/postgres"
+DATABASE_URL="postgresql://postgres:Sucesso%402026%23@db.dzrfmecdnavozxdeixxr.supabase.co:5432/postgres"
