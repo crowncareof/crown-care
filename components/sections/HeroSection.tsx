@@ -200,14 +200,14 @@ export default function HeroSection() {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative"
+            className="relative px-4 sm:px-0"
           >
             <BeforeAfterSlider />
-            {/* Floating badge */}
+            {/* Floating badge — hidden on very small screens to avoid overflow */}
             <motion.div
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -top-4 -left-4 bg-white rounded-2xl shadow-premium px-4 py-3 flex items-center gap-3"
+              className="hidden sm:flex absolute -top-4 -left-4 bg-white rounded-2xl shadow-premium px-4 py-3 items-center gap-3"
             >
               <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
                 <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -223,7 +223,7 @@ export default function HeroSection() {
             <motion.div
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              className="absolute -bottom-4 -right-4 bg-navy-800 rounded-2xl shadow-premium px-4 py-3 flex items-center gap-3"
+              className="hidden sm:flex absolute -bottom-4 -right-4 bg-navy-800 rounded-2xl shadow-premium px-4 py-3 items-center gap-3"
             >
               <div className="w-10 h-10 bg-gold-500/20 rounded-xl flex items-center justify-center">
                 <span className="text-gold-400 text-xl">⚡</span>
@@ -238,8 +238,8 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom wave */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div className="absolute bottom-0 left-0 right-0 overflow-hidden">
+        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-12 sm:h-20">
           <path d="M0 80L1440 80L1440 40C1200 80 960 0 720 20C480 40 240 80 0 40L0 80Z" fill="white"/>
         </svg>
       </div>

@@ -39,9 +39,9 @@ export default function Header() {
             <Image
               src="/logo-light.png"
               alt="Crown Care Services"
-              width={180}
-              height={56}
-              className="h-12 w-auto object-contain drop-shadow-sm
+              width={360}
+              height={112}
+              className="h-24 w-auto object-contain drop-shadow-sm
                          group-hover:scale-105 transition-transform duration-300"
               priority
             />

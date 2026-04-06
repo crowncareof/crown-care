@@ -44,9 +44,9 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           <Image
             src="/logo-light.png"
             alt="Crown Care Services"
-            width={160}
-            height={50}
-            className="h-11 w-auto opacity-90"
+            width={320}
+            height={100}
+            className="h-24 w-auto opacity-90"
           />
         </Link>
         <div className="text-white/30 text-[10px] font-body tracking-widest uppercase mt-2 ml-0.5">Admin Panel</div>
@@ -121,9 +121,9 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           <Image
             src="/logo-light.png"
             alt="Crown Care"
-            width={130}
-            height={40}
-            className="h-9 w-auto"
+            width={180}
+            height={56}
+            className="h-14 w-auto"
           />
         </Link>
         <button
