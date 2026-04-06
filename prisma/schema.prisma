@@ -1,0 +1,27 @@
+// Crown Care — Prisma 7 Schema
+// Database: Supabase PostgreSQL
+// Connection URLs live in prisma.config.ts
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // directUrl used by Prisma CLI (migrations/push)
+  // url used at runtime via connection pooler (pgBouncer)
+}
+
+// ─── Phase 1 placeholder ─────────────────────────────────────
+// Full models added in Phase 4
+// NOTE: Supabase Auth manages the auth.users table automatically.
+// We only store app-specific admin data here.
+model AdminProfile {
+  id        String   @id // matches Supabase auth.users UUID
+  email     String   @unique
+  name      String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
