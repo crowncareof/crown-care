@@ -10,15 +10,14 @@ import Footer from '@/components/sections/Footer';
 import WhatsAppButton from '@/components/ui/WhatsAppButton';
 import { prisma } from '@/lib/prisma';
 import { getSettings } from '@/lib/settings';
-import type { Service, Portfolio, Testimonial } from '@/lib/types';
 
 export const revalidate = 60;
 
 async function getData() {
   const [services, portfolio, testimonials, settings] = await Promise.all([
-    prisma.service.findMany({ orderBy: { order: 'asc' } }).catch(() => [] as Service[]),
-    prisma.portfolio.findMany({ where: { featured: true }, orderBy: { order: 'asc' }, take: 6 }).catch(() => [] as Portfolio[]),
-    prisma.testimonial.findMany({ where: { featured: true }, orderBy: { createdAt: 'desc' }, take: 6 }).catch(() => [] as Testimonial[]),
+    prisma.service.findMany({ orderBy: { order: 'asc' } }).catch(() => []),
+    prisma.portfolio.findMany({ where: { featured: true }, orderBy: { order: 'asc' }, take: 6 }).catch(() => []),
+    prisma.testimonial.findMany({ where: { featured: true }, orderBy: { createdAt: 'desc' }, take: 6 }).catch(() => []),
     getSettings().catch(() => ({} as Record<string, string>)),
   ]);
   return { services, portfolio, testimonials, settings };
