@@ -16,9 +16,9 @@ export default function Footer() {
               <Image
                 src="/logo-light.png"
                 alt="Crown Care Services"
-                width={300}
+                width={200}
                 height={62}
-                className="h-14 w-auto brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
+                className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity"
               />
             </Link>
             <p className="text-white/50 text-sm leading-relaxed font-body mb-6">

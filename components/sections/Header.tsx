@@ -2,6 +2,7 @@
 // components/sections/Header.tsx
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiPhone } from 'react-icons/fi';
 import { whatsappLink } from '@/lib/utils';
@@ -34,19 +35,16 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="relative w-9 h-9 flex items-center justify-center">
-              <div className="absolute inset-0 bg-gold-500 rounded-lg rotate-12 group-hover:rotate-6 transition-transform duration-300" />
-              <span className="relative text-navy-900 font-display font-bold text-lg">C</span>
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-display font-bold text-white text-xl tracking-wide">
-                Crown<span className="text-gold-500">Care</span>
-              </span>
-              <span className="text-white/50 text-[10px] font-body tracking-[0.15em] uppercase">
-                Premium Cleaning
-              </span>
-            </div>
+          <Link href="/" className="flex items-center group">
+            <Image
+              src="/logo-light.png"
+              alt="Crown Care Services"
+              width={180}
+              height={56}
+              className="h-12 w-auto object-contain drop-shadow-sm
+                         group-hover:scale-105 transition-transform duration-300"
+              priority
+            />
           </Link>
 
           {/* Desktop Nav */}

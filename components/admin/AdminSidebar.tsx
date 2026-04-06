@@ -2,6 +2,7 @@
 // components/admin/AdminSidebar.tsx
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -38,19 +39,17 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="px-6 py-6 border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <div className="relative w-8 h-8 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gold-500 rounded-lg rotate-12" />
-            <span className="relative text-navy-900 font-display font-bold text-sm">C</span>
-          </div>
-          <div>
-            <div className="font-display font-bold text-white text-lg leading-none">
-              Crown<span className="text-gold-400">Care</span>
-            </div>
-            <div className="text-white/40 text-[10px] font-body tracking-widest uppercase mt-0.5">Admin Panel</div>
-          </div>
-        </div>
+      <div className="px-6 py-5 border-b border-white/10">
+        <Link href="/">
+          <Image
+            src="/logo-light.png"
+            alt="Crown Care Services"
+            width={160}
+            height={50}
+            className="h-11 w-auto opacity-90"
+          />
+        </Link>
+        <div className="text-white/30 text-[10px] font-body tracking-widest uppercase mt-2 ml-0.5">Admin Panel</div>
       </div>
 
       {/* Nav */}
@@ -117,17 +116,16 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
         <SidebarContent />
       </aside>
 
-      {/* Mobile Top Bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-navy-950 border-b border-white/10 px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="relative w-7 h-7 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gold-500 rounded-md rotate-12" />
-            <span className="relative text-navy-900 font-display font-bold text-xs">C</span>
-          </div>
-          <span className="font-display font-bold text-white text-lg">
-            Crown<span className="text-gold-400">Care</span>
-          </span>
-        </div>
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-navy-950 border-b border-white/10 px-4 py-3 flex items-center justify-between">
+        <Link href="/">
+          <Image
+            src="/logo-light.png"
+            alt="Crown Care"
+            width={130}
+            height={40}
+            className="h-9 w-auto"
+          />
+        </Link>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
