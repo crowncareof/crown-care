@@ -28,17 +28,18 @@ model Setting {
 }
 
 model Service {
-  id            Int      @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   title         String
   description   String
   imageUrl      String?
   imagePublicId String?
   price         String?
   duration      String?
-  featured      Boolean  @default(false)
-  order         Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  featured      Boolean       @default(false)
+  order         Int           @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  appointments  Appointment[]
 }
 
 model Portfolio {
@@ -64,18 +65,64 @@ model Testimonial {
   comment   String
   avatarUrl String?
   featured  Boolean  @default(true)
+  status    String   @default("published")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Lead {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String
-  phone     String?
-  service   String?
-  message   String
-  status    String   @default("new")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               Int           @id @default(autoincrement())
+  // Contact
+  name             String
+  email            String?
+  phone            String?
+  address          String?
+  preferredContact String        @default("whatsapp")
+  // Furniture
+  furnitureType    String?
+  fabricType       String?
+  hasPets          Boolean       @default(false)
+  hasChildren      Boolean       @default(false)
+  protectionApplied Boolean      @default(false)
+  // Message / notes
+  message          String?
+  service          String?
+  // Pipeline
+  status           String        @default("new_lead")
+  source           String        @default("website")
+  lastServiceDate  DateTime?
+  totalServices    Int           @default(0)
+  totalRevenue     Float         @default(0)
+  serviceValue     Float?
+  // Internal (never public)
+  clientProfile    String?
+  satisfactionScore Int?
+  internalFlags    String?
+  privateNote      String?
+  // Photos
+  beforePhotoUrl   String?
+  afterPhotoUrl    String?
+  // Relations
+  appointments     Appointment[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model Appointment {
+  id                Int      @id @default(autoincrement())
+  clientName        String
+  clientEmail       String?
+  clientPhone       String?
+  serviceId         Int?
+  service           Service? @relation(fields: [serviceId], references: [id])
+  leadId            Int?
+  lead              Lead?    @relation(fields: [leadId], references: [id])
+  scheduledDate     DateTime
+  estimatedDuration Int      @default(120)
+  address           String?
+  status            String   @default("pending")
+  notes             String?
+  assignedTo        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
