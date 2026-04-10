@@ -2,9 +2,6 @@
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-in-production';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
-
 export interface JWTPayload {
   userId: number;
   email: string;
@@ -12,12 +9,14 @@ export interface JWTPayload {
 }
 
 export function signToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions);
+  const secret = process.env.JWT_SECRET!;
+  return jwt.sign(payload, secret, { expiresIn: 604800 });
 }
 
 export function verifyToken(token: string): JWTPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+    const secret = process.env.JWT_SECRET!;
+    return jwt.verify(token, secret) as JWTPayload;
   } catch {
     return null;
   }

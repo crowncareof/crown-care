@@ -1,22 +1,44 @@
 // app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
-import { signToken } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
-    if (!email || !password) return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    const body = await req.json();
+    const { email, password } = body;
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-    if (!user.active) return NextResponse.json({ error: 'Account deactivated. Contact an admin.' }, { status: 403 });
+    if (!email || !password) {
+      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+
+    if (!user) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    }
+
+    if (!user.active) {
+      return NextResponse.json({ error: 'Account deactivated' }, { status: 403 });
+    }
 
     const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    if (!isValid) {
+      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    }
 
-    const token = signToken({ userId: user.id, email: user.email, role: user.role });
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error('JWT_SECRET not set');
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role },
+      secret,
+      { expiresIn: 604800 } // 7 days in seconds as number
+    );
 
     const response = NextResponse.json({
       success: true,
