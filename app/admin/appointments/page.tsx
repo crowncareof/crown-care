@@ -2,7 +2,8 @@
 // app/admin/appointments/page.tsx
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiPlus, FiX, FiChevronLeft, FiChevronRight, FiAlertTriangle } from 'react-icons/fi';
+import { FiPlus, FiX, FiChevronLeft, FiChevronRight, FiAlertTriangle, FiUser } from 'react-icons/fi';
+import Link from 'next/link';
 import toast from 'react-hot-toast';
 import AdminShell from '@/components/admin/AdminShell';
 
@@ -39,6 +40,7 @@ export default function AppointmentsPage() {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [lastCreatedLeadId, setLastCreatedLeadId] = useState<number | null>(null);
   const [riskConfirm, setRiskConfirm] = useState('');
   const [riskModal, setRiskModal] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState(false);
@@ -78,7 +80,12 @@ export default function AppointmentsPage() {
         if (data.code === 'RISK_CLIENT') { toast.error('Admin approval required for risk clients'); return; }
         throw new Error(data.error);
       }
-      toast.success('Appointment created!');
+      if (data.leadId) setLastCreatedLeadId(data.leadId);
+      toast.success(
+        data.leadId
+          ? '✅ Appointment created! Client saved to CRM.'
+          : '✅ Appointment created!'
+      );
       setShowModal(false);
       setForm(EMPTY_FORM);
       fetchData();
@@ -216,6 +223,21 @@ export default function AppointmentsPage() {
           )}
         </div>
       </div>
+
+      {/* View Client in CRM banner */}
+      {lastCreatedLeadId && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-navy-800 text-white px-5 py-3 rounded-2xl shadow-premium-lg flex items-center gap-3">
+          <FiUser className="w-4 h-4 text-gold-400" />
+          <span className="text-sm font-body">Client saved to CRM</span>
+          <Link href="/admin/clients" onClick={() => setLastCreatedLeadId(null)}
+            className="text-sm text-gold-400 hover:text-gold-300 font-semibold underline">
+            View in Clients →
+          </Link>
+          <button onClick={() => setLastCreatedLeadId(null)} className="text-white/50 hover:text-white ml-1">
+            <FiX className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* New appointment modal */}
       <AnimatePresence>

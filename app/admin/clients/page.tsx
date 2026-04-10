@@ -163,15 +163,17 @@ function ClientDrawer({ client, onClose, onSave }: { client: Client; onClose: ()
           {/* Editable fields */}
           <div className="grid grid-cols-2 gap-3">
             {[
-              { key: 'name', label: 'Name', type: 'text' },
-              { key: 'phone', label: 'Phone', type: 'tel' },
-              { key: 'email', label: 'Email', type: 'email' },
-              { key: 'address', label: 'Address', type: 'text' },
-            ].map(({ key, label, type }) => (
-              <div key={key} className={key === 'name' || key === 'address' ? 'col-span-2' : ''}>
+              { key: 'name',    label: 'Name',    type: 'text',  span: 2 },
+              { key: 'phone',   label: 'Phone',   type: 'tel',   span: 1 },
+              { key: 'email',   label: 'Email',   type: 'email', span: 1 },
+              { key: 'address', label: 'Address', type: 'text',  span: 2 },
+            ].map(({ key, label, type, span }) => (
+              <div key={key} className={span === 2 ? 'col-span-2' : ''}>
                 <label className="block text-xs font-medium text-navy-800 mb-1 font-body">{label}</label>
                 <input type={type} value={(form as Record<string,unknown>)[key] as string || ''}
-                  onChange={e => set(key, e.target.value)} className="input-base text-sm" />
+                  onChange={e => set(key, e.target.value)}
+                  placeholder={key === 'email' ? 'client@email.com' : key === 'phone' ? '(555) 000-0000' : ''}
+                  className="input-base text-sm" />
               </div>
             ))}
           </div>

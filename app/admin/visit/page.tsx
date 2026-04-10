@@ -29,7 +29,7 @@ const FLAGS = [
 const STEPS = ['Client Info','Furniture','Service Details','Internal Eval','Review & Submit'];
 
 interface FormData {
-  name: string; phone: string; preferredContact: string;
+  name: string; phone: string; email: string; preferredContact: string;
   furnitureType: string; fabricType: string;
   hasPets: boolean; hasChildren: boolean; protectionApplied: boolean;
   serviceValue: string; satisfactionScore: number;
@@ -38,7 +38,7 @@ interface FormData {
 }
 
 const EMPTY: FormData = {
-  name:'', phone:'', preferredContact:'WhatsApp',
+  name:'', phone:'', email:'', preferredContact:'WhatsApp',
   furnitureType:'', fabricType:'',
   hasPets:false, hasChildren:false, protectionApplied:false,
   serviceValue:'', satisfactionScore:5,
@@ -161,6 +161,10 @@ export default function VisitPage() {
                 <div>
                   <label className="block text-sm font-medium text-navy-800 mb-1.5 font-body">Phone / WhatsApp *</label>
                   <input value={form.phone} onChange={e => set('phone', e.target.value)} placeholder="(555) 000-0000" className="input-base text-lg" type="tel" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-navy-800 mb-1.5 font-body">Email <span className="text-gray-400 font-normal">(optional)</span></label>
+                  <input value={form.email} onChange={e => set('email', e.target.value)} placeholder="client@email.com" className="input-base text-lg" type="email" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-navy-800 mb-2 font-body">Preferred contact</label>
