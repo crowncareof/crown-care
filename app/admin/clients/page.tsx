@@ -80,9 +80,26 @@ function AIMessageCard({ clientId }: { clientId: number }) {
 function ClientDrawer({ client, onClose, onSave }: { client: Client; onClose: () => void; onSave: () => void }) {
   const [form, setForm] = useState({ ...client });
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const token = () => localStorage.getItem('crown_token') || '';
 
   const set = (k: string, v: unknown) => setForm(p => ({ ...p, [k]: v }));
+
+  const handleDelete = async () => {
+    if (!confirm(`Delete ${client.name}? This action cannot be undone.`)) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/clients/${client.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token()}` },
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+      toast.success('Client deleted');
+      onSave();
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Error deleting');
+    } finally { setDeleting(false); }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -211,9 +228,15 @@ function ClientDrawer({ client, onClose, onSave }: { client: Client; onClose: ()
           {/* AI Message */}
           <AIMessageCard clientId={client.id} />
 
-          <button onClick={handleSave} disabled={saving} className="w-full btn-admin-gold justify-center mt-2">
-            {saving ? 'Saving…' : 'Save Changes'}
-          </button>
+          <div className="flex gap-2 mt-2">
+            <button onClick={handleDelete} disabled={deleting}
+              className="px-4 py-2.5 rounded-xl border border-red-500/30 text-red-400 text-sm hover:bg-red-500/10 transition-all font-body disabled:opacity-50 flex items-center gap-1.5">
+              <FiTrash2 className="w-3.5 h-3.5" /> {deleting ? 'Deleting…' : 'Delete'}
+            </button>
+            <button onClick={handleSave} disabled={saving} className="flex-1 btn-admin-gold justify-center">
+              {saving ? 'Saving…' : 'Save Changes'}
+            </button>
+          </div>
         </div>
       </motion.div>
     </div>

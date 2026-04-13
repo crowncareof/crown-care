@@ -10,14 +10,15 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String
-  role      String   @default("collaborator")
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  name         String
+  role         String        @default("collaborator")
+  active       Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  performances Performance[]
 }
 
 model Setting {
@@ -34,12 +35,14 @@ model Service {
   imageUrl      String?
   imagePublicId String?
   price         String?
+  priceValue    Float?
   duration      String?
   featured      Boolean       @default(false)
   order         Int           @default(0)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   appointments  Appointment[]
+  upsells       Upsell[]
 }
 
 model Portfolio {
@@ -71,58 +74,123 @@ model Testimonial {
 }
 
 model Lead {
-  id               Int           @id @default(autoincrement())
+  id                Int           @id @default(autoincrement())
   // Contact
-  name             String
-  email            String?
-  phone            String?
-  address          String?
-  preferredContact String        @default("whatsapp")
+  name              String
+  email             String?
+  phone             String?
+  address           String?
+  preferredContact  String        @default("whatsapp")
+  // Intelligence
+  clientScore       Int           @default(50)
+  lifetimeValue     Float         @default(0)
+  riskLevel         String        @default("low")
+  visitFrequency    Float         @default(0)
   // Furniture
-  furnitureType    String?
-  fabricType       String?
-  hasPets          Boolean       @default(false)
-  hasChildren      Boolean       @default(false)
-  protectionApplied Boolean      @default(false)
+  furnitureType     String?
+  fabricType        String?
+  hasPets           Boolean       @default(false)
+  hasChildren       Boolean       @default(false)
+  protectionApplied Boolean       @default(false)
   // Message / notes
-  message          String?
-  service          String?
+  message           String?
+  service           String?
   // Pipeline
-  status           String        @default("new_lead")
-  source           String        @default("website")
-  lastServiceDate  DateTime?
-  totalServices    Int           @default(0)
-  totalRevenue     Float         @default(0)
-  serviceValue     Float?
+  status            String        @default("new_lead")
+  source            String        @default("website")
+  lastServiceDate   DateTime?
+  totalServices     Int           @default(0)
+  totalRevenue      Float         @default(0)
+  serviceValue      Float?
   // Internal (never public)
-  clientProfile    String?
+  clientProfile     String?
   satisfactionScore Int?
-  internalFlags    String?
-  privateNote      String?
+  internalFlags     String?
+  privateNote       String?
   // Photos
-  beforePhotoUrl   String?
-  afterPhotoUrl    String?
+  beforePhotoUrl    String?
+  afterPhotoUrl     String?
   // Relations
-  appointments     Appointment[]
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  appointments      Appointment[]
+  upsells           Upsell[]
+  notifications     Notification[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }
 
 model Appointment {
-  id                Int      @id @default(autoincrement())
+  id                Int          @id @default(autoincrement())
   clientName        String
   clientEmail       String?
   clientPhone       String?
   serviceId         Int?
-  service           Service? @relation(fields: [serviceId], references: [id])
+  service           Service?     @relation(fields: [serviceId], references: [id])
   leadId            Int?
-  lead              Lead?    @relation(fields: [leadId], references: [id])
+  lead              Lead?        @relation(fields: [leadId], references: [id])
   scheduledDate     DateTime
-  estimatedDuration Int      @default(120)
+  estimatedDuration Int          @default(120)
   address           String?
-  status            String   @default("pending")
+  status            String       @default("pending")
   notes             String?
   assignedTo        String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  totalCharged      Float?
+  upsells           Upsell[]
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model Upsell {
+  id            Int          @id @default(autoincrement())
+  leadId        Int?
+  lead          Lead?        @relation(fields: [leadId], references: [id])
+  appointmentId Int?
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+  serviceId     Int?
+  service       Service?     @relation(fields: [serviceId], references: [id])
+  serviceName   String
+  price         Float
+  status        String       @default("offered") // offered | accepted | rejected
+  offeredBy     String?
+  createdAt     DateTime     @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  leadId    Int?
+  lead      Lead?    @relation(fields: [leadId], references: [id])
+  type      String   // inactive | missing_data | upsell_opportunity | vip_unattended | high_risk
+  title     String
+  message   String
+  priority  String   @default("medium") // low | medium | high | critical
+  status    String   @default("unread") // unread | read | snoozed | dismissed
+  snoozedUntil DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Performance {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  month         Int
+  year          Int
+  upsellOffered Int      @default(0)
+  upsellAccepted Int     @default(0)
+  revenueGenerated Float @default(0)
+  visitsCompleted Int    @default(0)
+  avgTicket     Float    @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  @@unique([userId, month, year])
+}
+
+model TrainingModule {
+  id          Int      @id @default(autoincrement())
+  title       String
+  category    String   // sales | service | checklist
+  content     String
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
